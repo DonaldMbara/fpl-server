@@ -58,31 +58,6 @@
             }
         }
 
-        // Function to fetch and display the list of users
-        async function fetchUsers() {
-            const url = 'https://fpl-server-five.vercel.app/api/users';
-            try {
-                const response = await fetch(url);
-                if (response.ok) {
-                    const data = await response.json();
-                    const users = data.users; // Adjust based on your actual data structure
-                    const userList = document.getElementById('userList');
-
-                    userList.innerHTML = ''; // Clear existing content
-
-                    users.forEach(user => {
-                        const listItem = document.createElement('li');
-                        listItem.className = 'list-group-item';
-                        listItem.innerText = user.name; // Adjust based on your actual data structure
-                        userList.appendChild(listItem);
-                    });
-                } else {
-                    console.error('Failed to fetch users');
-                }
-            } catch (error) {
-                console.error('Error fetching users:', error);
-            }
-        }
 
         // Event listener for gameweek section dropdown change
         document.getElementById('sectionSelect').addEventListener('change', (event) => {
@@ -93,7 +68,6 @@
         // Fetch initial data and users
         const initialSection = document.getElementById('sectionSelect').value.split(',').map(Number);
         fetchData(initialSection[0], initialSection[1]);
-        fetchUsers();
     </script>
 </body>
 </html>
