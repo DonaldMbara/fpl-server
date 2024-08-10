@@ -6,33 +6,6 @@
     <title>FPL Dashboard</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="styles.css"> <!-- Link to your CSS file -->
-    <style>
-        body {
-            padding-top: 20px;
-        }
-        .container {
-            max-width: 900px;
-        }
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-        .form-group label {
-            font-weight: bold;
-        }
-        .list-group-item {
-            border-radius: 0.25rem;
-        }
-        .list-group-item-action {
-            cursor: pointer;
-        }
-        .mb-4 {
-            margin-bottom: 1.5rem !important;
-        }
-        .alert {
-            margin-top: 1rem;
-        }
-    </style>
 </head>
 <body>
     <div class="container">
@@ -51,26 +24,17 @@
         </div>
 
         <!-- Div to display standings -->
-        <div id="standings" class="list-group mb-4">
-            <!-- Standings will be dynamically populated here -->
-        </div>
-
-        <!-- Div to display list of users -->
-        <h2 class="mb-4">Existing Users</h2>
-        <ul id="userList" class="list-group">
-            <!-- User list will be dynamically populated here -->
-        </ul>
+        <div id="standings" class="list-group"></div>
     </div>
 
     <script>
-        // Function to fetch data for the selected gameweek section
         async function fetchData(startGW, endGW) {
             const url = `https://fpl-server-five.vercel.app/api/standings/${startGW}/${endGW}`;
             try {
                 const response = await fetch(url);
                 if (response.ok) {
                     const data = await response.json();
-                    const standings = data.results; // Adjust based on your actual data structure
+                    const standings = data.results; // Adjust this based on your actual data structure
                     const listGroup = document.getElementById('standings');
 
                     listGroup.innerHTML = ''; // Clear existing content
@@ -89,14 +53,12 @@
             }
         }
 
-
-        // Event listener for gameweek section dropdown change
         document.getElementById('sectionSelect').addEventListener('change', (event) => {
             const [startGW, endGW] = event.target.value.split(',').map(Number);
             fetchData(startGW, endGW);
         });
 
-        // Fetch initial data and users
+        // Fetch initial data
         const initialSection = document.getElementById('sectionSelect').value.split(',').map(Number);
         fetchData(initialSection[0], initialSection[1]);
     </script>
