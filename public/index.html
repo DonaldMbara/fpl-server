@@ -10,29 +10,56 @@
 <body>
     <div class="container">
         <h1 class="my-4">FPL Head-to-Head Dashboard</h1>
+
+        <!-- Dropdown for selecting game week sections -->
+        <div class="form-group">
+            <label for="sectionSelect">Select Section:</label>
+            <select id="sectionSelect" class="form-control">
+                <option value="1,10">Game Weeks 1-10</option>
+                <option value="11,20">Game Weeks 11-20</option>
+                <option value="21,30">Game Weeks 21-30</option>
+                <option value="31,38">Game Weeks 31-38</option>
+            </select>
+        </div>
+
+        <!-- Div to display standings -->
         <div id="standings" class="list-group"></div>
     </div>
-    <script>
-        async function fetchData() {
-            const response = await fetch('https://fpl-server-five.vercel.app/api/standings');
-            if (response.ok) {
-                const data = await response.json();
-                const standings = data.standings.results;
-                const listGroup = document.getElementById('standings');
-                
-                listGroup.innerHTML = ''; // Clear existing content
 
-                standings.forEach(player => {
-                    const item = document.createElement('a');
-                    item.className = 'list-group-item list-group-item-action';
-                    item.innerText = `${player.player_name} - Points: ${player.total_points}`;
-                    listGroup.appendChild(item);
-                });
-            } else {
-                console.error('Failed to fetch data');
+    <script>
+        async function fetchData(startGW, endGW) {
+            const url = `https://fpl-server-five.vercel.app/api/standings/${startGW}/${endGW}`;
+            try {
+                const response = await fetch(url);
+                if (response.ok) {
+                    const data = await response.json();
+                    const standings = data.results; // Adjust this based on your actual data structure
+                    const listGroup = document.getElementById('standings');
+
+                    listGroup.innerHTML = ''; // Clear existing content
+
+                    standings.forEach(player => {
+                        const item = document.createElement('a');
+                        item.className = 'list-group-item list-group-item-action';
+                        item.innerText = `${player.player_name} - Points: ${player.total_points}`;
+                        listGroup.appendChild(item);
+                    });
+                } else {
+                    console.error('Failed to fetch data');
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
             }
         }
-        fetchData();
+
+        document.getElementById('sectionSelect').addEventListener('change', (event) => {
+            const [startGW, endGW] = event.target.value.split(',').map(Number);
+            fetchData(startGW, endGW);
+        });
+
+        // Fetch initial data
+        const initialSection = document.getElementById('sectionSelect').value.split(',').map(Number);
+        fetchData(initialSection[0], initialSection[1]);
     </script>
 </body>
 </html>
