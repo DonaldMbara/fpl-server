@@ -4,15 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FPL Dashboard</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="styles.css"> 
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
         <h1 class="my-4">FPL Head-to-Head Wafa Wafa</h1>
         <p><i>Shows the current standings of a head-to-head league for selected game week sections and a list of all existing users.</i></p>
 
-        <!-- Dropdown for selecting game week sections -->
         <div class="form-group">
             <label for="sectionSelect">Select Gameweek Section:</label>
             <select id="sectionSelect" class="form-control">
@@ -23,21 +21,20 @@
             </select>
         </div>
 
-        <!-- Div to display standings -->
         <div id="standings" class="list-group"></div>
     </div>
 
     <script>
         async function fetchData(startGW, endGW) {
-            const url = `/api/standings/${startGW}/${endGW}`; // Use relative URL
+            const url = `/api/standings?startGW=${startGW}&endGW=${endGW}`;
             try {
                 const response = await fetch(url);
                 if (response.ok) {
                     const data = await response.json();
-                    const standings = data.results; // Adjust this based on your actual data structure
+                    const standings = data.results;
                     const listGroup = document.getElementById('standings');
 
-                    listGroup.innerHTML = ''; // Clear existing content
+                    listGroup.innerHTML = '';
 
                     standings.forEach(player => {
                         const item = document.createElement('a');
@@ -58,7 +55,6 @@
             fetchData(startGW, endGW);
         });
 
-        // Fetch initial data
         const initialSection = document.getElementById('sectionSelect').value.split(',').map(Number);
         fetchData(initialSection[0], initialSection[1]);
     </script>
