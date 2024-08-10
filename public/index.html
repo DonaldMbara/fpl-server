@@ -10,7 +10,7 @@
 <body>
     <div class="container">
         <h1 class="my-4">FPL Head-to-Head Wafa Wafa</h1>
-        <p><i>Shows the current standings of a head-to-head league for selected game week sections and allows you to view details for individual users.</i></p>
+        <p><i>Shows the current standings of a head-to-head league for selected game week sections and a list of all existing users.</i></p>
 
         <!-- Dropdown for selecting game week sections -->
         <div class="form-group">
@@ -23,16 +23,12 @@
             </select>
         </div>
 
-        <!-- Dropdown for selecting users -->
-        <div class="form-group">
-            <label for="userSelect">Select User:</label>
-            <select id="userSelect" class="form-control">
-                <!-- Options will be populated dynamically -->
-            </select>
-        </div>
-
         <!-- Div to display standings -->
-        <div id="standings" class="list-group"></div>
+        <div id="standings" class="list-group mb-4"></div>
+
+        <!-- Div to display list of users -->
+        <h2>Existing Users</h2>
+        <ul id="userList" class="list-group"></ul>
     </div>
 
     <script>
@@ -62,7 +58,7 @@
             }
         }
 
-        // Function to fetch and populate user dropdown
+        // Function to fetch and display the list of users
         async function fetchUsers() {
             const url = 'https://fpl-server-five.vercel.app/api/users';
             try {
@@ -70,15 +66,15 @@
                 if (response.ok) {
                     const data = await response.json();
                     const users = data.users; // Adjust based on your actual data structure
-                    const userSelect = document.getElementById('userSelect');
+                    const userList = document.getElementById('userList');
 
-                    userSelect.innerHTML = '<option value="">Select a User</option>'; // Clear and add placeholder
+                    userList.innerHTML = ''; // Clear existing content
 
                     users.forEach(user => {
-                        const option = document.createElement('option');
-                        option.value = user.id; // Assuming user object has an 'id' field
-                        option.innerText = user.name; // Assuming user object has a 'name' field
-                        userSelect.appendChild(option);
+                        const listItem = document.createElement('li');
+                        listItem.className = 'list-group-item';
+                        listItem.innerText = user.name; // Adjust based on your actual data structure
+                        userList.appendChild(listItem);
                     });
                 } else {
                     console.error('Failed to fetch users');
@@ -92,15 +88,6 @@
         document.getElementById('sectionSelect').addEventListener('change', (event) => {
             const [startGW, endGW] = event.target.value.split(',').map(Number);
             fetchData(startGW, endGW);
-        });
-
-        // Event listener for user dropdown change
-        document.getElementById('userSelect').addEventListener('change', (event) => {
-            const userId = event.target.value;
-            if (userId) {
-                // Fetch user-specific data or handle user selection
-                console.log('Selected user ID:', userId);
-            }
         });
 
         // Fetch initial data and users
