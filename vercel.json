@@ -11,9 +11,6 @@
         "src": "/api/(.*)",
         "dest": "/server.js"
       }
-    ],
-    "env": {
-      "PORT": "3000"
-    }
+    ]
   }
   
