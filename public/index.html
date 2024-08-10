@@ -4,13 +4,74 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FPL Dashboard</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        :root {
+            --primary-color: #9558a1; 
+            --secondary-color: #0ce96f; 
+            --text-color: #6a56dd; 
+            --accent-color: #1fc8d4; 
+        }
+
+        body {
+            background-color: #f1f1f1; /* Light Gray */
+            color: var(--text-color);
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: var(--primary-color);
+            border-radius: 10px;
+        }
+
+        h1 {
+            color: var(--text-color);
+            font-size: 2.5rem;
+        }
+
+        p {
+            color: var(--text-color);
+            font-style: italic;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-control {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            border: 1px solid var(--accent-color);
+            border-radius: 5px;
+        }
+
+        .form-control:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 0.2rem rgba(163, 193, 79, 0.25);
+        }
+
+        .list-group-item {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            border: 1px solid var(--primary-color);
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+
+        .list-group-item:hover {
+            background-color: var(--primary-color);
+            color: var(--text-color);
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <h1 class="my-4">FPL Head-to-Head Wafa Wafa</h1>
         <p><i>Shows the current standings of a head-to-head league for selected game week sections and a list of all existing users.</i></p>
 
+        <!-- Dropdown for selecting game week sections -->
         <div class="form-group">
             <label for="sectionSelect">Select Gameweek Section:</label>
             <select id="sectionSelect" class="form-control">
@@ -21,20 +82,21 @@
             </select>
         </div>
 
+        <!-- Div to display standings -->
         <div id="standings" class="list-group"></div>
     </div>
 
     <script>
         async function fetchData(startGW, endGW) {
-            const url = `/api/standings?startGW=${startGW}&endGW=${endGW}`;
+            const url = `https://fpl-server-five.vercel.app/api/standings/${startGW}/${endGW}`;
             try {
                 const response = await fetch(url);
                 if (response.ok) {
                     const data = await response.json();
-                    const standings = data.results;
+                    const standings = data.results; // Adjust this based on your actual data structure
                     const listGroup = document.getElementById('standings');
 
-                    listGroup.innerHTML = '';
+                    listGroup.innerHTML = ''; // Clear existing content
 
                     standings.forEach(player => {
                         const item = document.createElement('a');
@@ -55,6 +117,7 @@
             fetchData(startGW, endGW);
         });
 
+        // Fetch initial data
         const initialSection = document.getElementById('sectionSelect').value.split(',').map(Number);
         fetchData(initialSection[0], initialSection[1]);
     </script>
