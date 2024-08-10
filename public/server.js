@@ -7,10 +7,10 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
+const url = `https://fantasy.premierleague.com/api/leagues-h2h-matches/league/${leagueId}/`;
 
 // Function to fetch H2H data for a specific section
 async function fetchH2HData(leagueId, startGW, endGW) {
-    const url = `https://fantasy.premierleague.com/api/leagues-h2h-matches/league/${leagueId}/`;
     try {
         const response = await axios.get(url);
         const data = response.data;
@@ -22,6 +22,22 @@ async function fetchH2HData(leagueId, startGW, endGW) {
     }
 }
 
+// Function to fetch league details including users
+async function fetchLeagueDetails(leagueId) {
+    try {
+        const response = await axios.get(url);
+        const data = response.data;
+        // Extract user information from league details
+        return data.league.standings.results.map(user => ({
+            id: user.entry,
+            name: user.player_name
+        }));
+    } catch (error) {
+        console.error(error);
+        throw new Error('Error fetching league details from FPL API');
+    }
+}
+
 // Route to fetch H2H data for a specific section
 app.get('/api/standings/:startGW/:endGW', async (req, res) => {
     const { startGW, endGW } = req.params;
@@ -29,6 +45,17 @@ app.get('/api/standings/:startGW/:endGW', async (req, res) => {
     try {
         const data = await fetchH2HData(leagueId, parseInt(startGW), parseInt(endGW));
         res.json({ results: data });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// Route to fetch existing joined users
+app.get('/api/users', async (req, res) => {
+    const leagueId = '901692'; // Replace with your actual league ID
+    try {
+        const users = await fetchLeagueDetails(leagueId);
+        res.json({ users });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

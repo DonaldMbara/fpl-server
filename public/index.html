@@ -10,6 +10,7 @@
 <body>
     <div class="container">
         <h1 class="my-4">FPL Head-to-Head Wafa Wafa</h1>
+        <p><i>Shows the current standings of a head-to-head league for selected game week sections and allows you to view details for individual users.</i></p>
 
         <!-- Dropdown for selecting game week sections -->
         <div class="form-group">
@@ -22,18 +23,27 @@
             </select>
         </div>
 
+        <!-- Dropdown for selecting users -->
+        <div class="form-group">
+            <label for="userSelect">Select User:</label>
+            <select id="userSelect" class="form-control">
+                <!-- Options will be populated dynamically -->
+            </select>
+        </div>
+
         <!-- Div to display standings -->
         <div id="standings" class="list-group"></div>
     </div>
 
     <script>
+        // Function to fetch data for the selected gameweek section
         async function fetchData(startGW, endGW) {
             const url = `https://fpl-server-five.vercel.app/api/standings/${startGW}/${endGW}`;
             try {
                 const response = await fetch(url);
                 if (response.ok) {
                     const data = await response.json();
-                    const standings = data.results; // Adjust this based on your actual data structure
+                    const standings = data.results; // Adjust based on your actual data structure
                     const listGroup = document.getElementById('standings');
 
                     listGroup.innerHTML = ''; // Clear existing content
@@ -52,14 +62,51 @@
             }
         }
 
+        // Function to fetch and populate user dropdown
+        async function fetchUsers() {
+            const url = 'https://fpl-server-five.vercel.app/api/users';
+            try {
+                const response = await fetch(url);
+                if (response.ok) {
+                    const data = await response.json();
+                    const users = data.users; // Adjust based on your actual data structure
+                    const userSelect = document.getElementById('userSelect');
+
+                    userSelect.innerHTML = '<option value="">Select a User</option>'; // Clear and add placeholder
+
+                    users.forEach(user => {
+                        const option = document.createElement('option');
+                        option.value = user.id; // Assuming user object has an 'id' field
+                        option.innerText = user.name; // Assuming user object has a 'name' field
+                        userSelect.appendChild(option);
+                    });
+                } else {
+                    console.error('Failed to fetch users');
+                }
+            } catch (error) {
+                console.error('Error fetching users:', error);
+            }
+        }
+
+        // Event listener for gameweek section dropdown change
         document.getElementById('sectionSelect').addEventListener('change', (event) => {
             const [startGW, endGW] = event.target.value.split(',').map(Number);
             fetchData(startGW, endGW);
         });
 
-        // Fetch initial data
+        // Event listener for user dropdown change
+        document.getElementById('userSelect').addEventListener('change', (event) => {
+            const userId = event.target.value;
+            if (userId) {
+                // Fetch user-specific data or handle user selection
+                console.log('Selected user ID:', userId);
+            }
+        });
+
+        // Fetch initial data and users
         const initialSection = document.getElementById('sectionSelect').value.split(',').map(Number);
         fetchData(initialSection[0], initialSection[1]);
+        fetchUsers();
     </script>
 </body>
 </html>
