@@ -8,9 +8,11 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
+const leagueId = '901692'; // Replace with your actual league ID
+const url = `https://fantasy.premierleague.com/api/leagues-h2h-matches/league/${leagueId}/`;
+
 // Function to fetch H2H data for a specific section
 async function fetchH2HData(leagueId, startGW, endGW) {
-    const url = `https://fantasy.premierleague.com/api/leagues-h2h-matches/league/${leagueId}/`;
     try {
         const response = await axios.get(url);
         const data = response.data;
@@ -25,7 +27,6 @@ async function fetchH2HData(leagueId, startGW, endGW) {
 // Route to fetch H2H data for a specific section
 app.get('/api/standings/:startGW/:endGW', async (req, res) => {
     const { startGW, endGW } = req.params;
-    const leagueId = '901692'; // Replace with your actual league ID
     try {
         const data = await fetchH2HData(leagueId, parseInt(startGW), parseInt(endGW));
         res.json({ results: data });
@@ -34,6 +35,4 @@ app.get('/api/standings/:startGW/:endGW', async (req, res) => {
     }
 });
 
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-});
+module.exports = app;
