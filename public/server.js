@@ -50,16 +50,16 @@ app.get('/api/standings/:startGW/:endGW', async (req, res) => {
     }
 });
 
-// Route to fetch existing joined users
-app.get('/api/users', async (req, res) => {
-    const leagueId = '901692'; // Replace with your actual league ID
-    try {
-        const users = await fetchLeagueDetails(leagueId);
-        res.json({ users });
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-});
+// // Route to fetch existing joined users
+// app.get('/api/users', async (req, res) => {
+//     const leagueId = '901692'; // Replace with your actual league ID
+//     try {
+//         const users = await fetchLeagueDetails(leagueId);
+//         res.json({ users });
+//     } catch (error) {
+//         res.status(500).json({ message: error.message });
+//     }
+// });
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
