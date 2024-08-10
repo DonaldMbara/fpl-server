@@ -6,6 +6,33 @@
     <title>FPL Dashboard</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="styles.css"> <!-- Link to your CSS file -->
+    <style>
+        body {
+            padding-top: 20px;
+        }
+        .container {
+            max-width: 900px;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        .form-group label {
+            font-weight: bold;
+        }
+        .list-group-item {
+            border-radius: 0.25rem;
+        }
+        .list-group-item-action {
+            cursor: pointer;
+        }
+        .mb-4 {
+            margin-bottom: 1.5rem !important;
+        }
+        .alert {
+            margin-top: 1rem;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -24,11 +51,15 @@
         </div>
 
         <!-- Div to display standings -->
-        <div id="standings" class="list-group mb-4"></div>
+        <div id="standings" class="list-group mb-4">
+            <!-- Standings will be dynamically populated here -->
+        </div>
 
         <!-- Div to display list of users -->
-        <h2>Existing Users</h2>
-        <ul id="userList" class="list-group"></ul>
+        <h2 class="mb-4">Existing Users</h2>
+        <ul id="userList" class="list-group">
+            <!-- User list will be dynamically populated here -->
+        </ul>
     </div>
 
     <script>
