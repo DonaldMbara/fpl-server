@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FPL Dashboard</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="styles.css"> <!-- Link to your CSS file -->
+    <link rel="stylesheet" href="styles.css"> 
 </head>
 <body>
     <div class="container">
@@ -29,7 +29,7 @@
 
     <script>
         async function fetchData(startGW, endGW) {
-            const url = `https://fpl-server-five.vercel.app/api/standings/${startGW}/${endGW}`;
+            const url = `/api/standings/${startGW}/${endGW}`; // Use relative URL
             try {
                 const response = await fetch(url);
                 if (response.ok) {
